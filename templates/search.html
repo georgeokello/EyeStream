@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid pb-0">
+
+    <h6>Result for {{search}}</h6>
+  
+    <hr>
+
+    <div class="video-block section-padding">
+        <div class="row">
+
+            <!-- video results -->
+
+            {% for video in videos %}
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="video-card">
+                    <div class="video-card-image">
+                        <a class="play-icon" href="{% url 'play_video' video.id %}"><i
+                                class="fas fa-play-circle"></i></a>
+                        <a href="{% url 'play_video' video.id %}"><img class="img-fluid" style="height: 155px;"
+                                src="{{video.thumbnail.url}}" alt=""></a>
+                        <div class="time">3:50</div>
+                    </div>
+                    <div class="video-card-body">
+                        <div class="video-title">
+                            <a href="#">{{video.video_name}}</a>
+                        </div>
+                        <div class="video-page text-success">
+                            {{video.catergory}} <a title="" data-placement="top" data-toggle="tooltip" href="#"
+                                data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></a>
+                        </div>
+                        <div class="video-view">
+                            {{video.views}} &nbsp;<i class="fas fa-calendar-alt"></i> {{video.date}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

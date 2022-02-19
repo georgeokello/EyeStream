@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid pb-0">
+
+    <a class="nav-link" href="{% url 'create_channel' %}">
+        <i class="fas fa-plus-circle fa-fw"></i>
+        <span>Create a new channel</span>
+    </a>
+
+    <hr>
+
+    <div class="video-block section-padding">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="main-title">
+                    <h6>Popular channels</h6>
+                </div>
+            </div>
+
+
+
+            <!-- Featured video space -->
+
+            {% for i in channels %}
+
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="channels-card">
+                    <div class="channels-card-image">
+                        <a href="#"><img class="img-fluid" src="{{i.channel_picture.url}}" alt=""></a>
+                    </div>
+                    <div class="channels-card-body">
+                        <div class="channels-title">
+                            <a href="{% url 'channel_details' i.id %}">{{i}}</a>
+                        </div>
+                        <div class="channels-view">
+                            {{i.subscribers|length}} Subscribers
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+    </div>
+
+
+    <hr class="mt-0">
+
+
+    <div class="video-block section-padding">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="main-title">
+                    <h6>Featured Videos</h6>
+                </div>
+            </div>
+
+            <!-- Featured video space -->
+
+            {% for video in videos %}
+            <div class="col-xl-3 col-sm-6 mb-3">
+                <div class="video-card">
+                    <div class="video-card-image">
+                        <a class="play-icon" href="{% url 'play_video' video.id %}"><i
+                                class="fas fa-play-circle"></i></a>
+                        <a href="{% url 'play_video' video.id %}"><img class="img-fluid" style="height: 155px;"
+                                src="{{video.thumbnail.url}}" alt=""></a>
+                        <div class="time">{{video.id.duration}}</div>
+                    </div>
+                    <div class="video-card-body">
+                        <div class="video-title">
+                            <a href="#">{{video.video_name}}</a>
+                        </div>
+                        <div class="video-page text-success">
+                            {{video.catergory}} <a title="" data-placement="top" data-toggle="tooltip" href="#"
+                                data-original-title="Verified"><i class="fas fa-check-circle text-success"></i></a>
+                        </div>
+                        <div class="video-view">
+                            {{video.views}} &nbsp;<i class="fas fa-calendar-alt"></i> {{video.date}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}
