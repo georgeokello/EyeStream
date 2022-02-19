@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-42s6c9wwp2%=v91w6m5-h@w(3x@m#2&7r*xctwz_pz+)2^u49@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['eye-stream.herokuapp.com']
 
 
 # Application definition
