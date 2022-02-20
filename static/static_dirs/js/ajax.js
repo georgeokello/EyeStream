@@ -1,5 +1,6 @@
 $(document).ready(function(){
     // subscriber button ajax call
+    console.log("Am working....")
     $('.subscribe_btn').submit(function(e){
         e.preventDefault()
         const channel_id = $('.sub-btn').val()

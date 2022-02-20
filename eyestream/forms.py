@@ -36,7 +36,7 @@ class ChannelsForm(forms.ModelForm):
 
 
 
-cat_options =(('1','gaming'), ('2','your life'))     
+cat_options =(('Gaming','gaming'), ('Style','style'), ('Education','education'), ('News','news'), ('Kids','kids'), ('Entertainment','entertainment'), ('Films','films'),('Comedy','comedy'))     
 class videoForm(forms.ModelForm):
     catergory = forms.ChoiceField(choices=cat_options)
     class Meta:

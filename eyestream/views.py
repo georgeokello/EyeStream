@@ -161,6 +161,7 @@ def subscribe_btn(request):
         return JsonResponse(data, safe=False)
     return JsonResponse({'error': 'error ocured'})
 
+
 def searchVideo(request):
     if request.method == "POST":
         search_value = request.POST['search_value']

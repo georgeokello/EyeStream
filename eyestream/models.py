@@ -54,7 +54,7 @@ class Videos(models.Model):
     about = models.TextField(max_length=120)
     channel_name = models.ForeignKey(Channels, on_delete=models.CASCADE, related_name='video_channel')
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True, upload_to='video_thumbnail')
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
 
     def __str__(self):
         return f"channel - {self.channel_name} -- {self.video_name}"
