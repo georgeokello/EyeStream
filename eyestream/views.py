@@ -34,7 +34,7 @@ def Home(request):
 def channels(request):
     videos = Videos.objects.all()
     channels = Channels.objects.all()
-    return render(request, 'channels.html', {'videos':videos,'channels':channels})
+    return render(request, 'channels.html', {'videos':videos, 'channels':channels})
 
 
 
@@ -94,7 +94,7 @@ def profile(request):
             u_form.save()
             p_form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('UserProfile')
+            return redirect('Home')
 
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -110,15 +110,21 @@ def profile(request):
 
 @login_required(login_url=("login"))
 def upload(request):
-
+    
     if request.method == 'POST':
-        v_form = videoForm(request.user,request.POST, request.FILES,)
-        if v_form.is_valid():
-            v_form.save()
-            return redirect('channels')
+        form = videoForm(request.user,request.POST, request.FILES,)
+        if form.is_valid():
+            form.save()
+            data={
+            'error': False, 
+            'message': 'Uploaded Successfully'
+            }
+            return JsonResponse(data, safe=False)
+        else:
+                return JsonResponse({'error': True, 'errors': 'Error occured'})
     else:
-        v_form = videoForm(request.user)
-    return render(request, 'upload.html', {'v_form': v_form})
+        form = videoForm(request.user)
+    return render(request, 'upload.html', {'form': form})
 
 
 def play_video(request, pk):
@@ -137,7 +143,7 @@ def play_video(request, pk):
         'videos':videos, 
         'video_views':video_views,
         'subscribers_count':subscribers_count,
-        }
+    }
 
     return render(request, 'video-page.html', context)
 

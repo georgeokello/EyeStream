@@ -1,15 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
-from django.db.models.fields import CharField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.core.files.storage import default_storage as storage
 
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default="default.jpg", null=True, blank=True, upload_to='profile_pics')
+    image = models.ImageField(default='media/default.jpg',null=True, blank=True, upload_to='profile_pics')
 
     def __str__(self):
         return f'{self.user.username} Profile'
@@ -18,12 +18,15 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)
 
-        img = Image.open(self.image.path)
-
+        # img = Image.open(self.image.name)
+        img = Image.open(storage.open(self.image.name))
+        
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
             img.thumbnail(output_size)
-            img.save(self.image.path)
+            img.save(self.image.name)
+
+       
 
 
 @receiver(post_save, sender=User)
@@ -47,6 +50,7 @@ class Channels(models.Model):
     def __str__(self):
         return f"{self.channel_name}"
 
+
 class Videos(models.Model):
     video_name = models.CharField(max_length=120)
     catergory = models.CharField(max_length=120)
@@ -55,6 +59,9 @@ class Videos(models.Model):
     channel_name = models.ForeignKey(Channels, on_delete=models.CASCADE, related_name='video_channel')
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True, upload_to='video_thumbnail')
     date = models.DateField(auto_now=True)
+
+    # existingPath = models.CharField(unique=True, max_length=100)
+    # eof = models.BooleanField()
 
     def __str__(self):
         return f"channel - {self.channel_name} -- {self.video_name}"

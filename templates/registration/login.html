@@ -37,9 +37,10 @@
                             <h5 class="mt-3 mb-3">Welcome to Eyestream</h5>
                             <p>It is a long established fact that a reader <br> will be distracted by the readable.</p>
                         </div>
-                        <form method='POST'>
+                        <form enctype="multipart/form-data" method='POST'>
                             {% csrf_token %}
                             <div class="form-group">
+                                
                                 <label>Username</label>
                                 <p>{{form.username}}</p>
                             </div>
@@ -63,7 +64,9 @@
                     </div>
                 </div>
                 <div class="col-md-7">
+                    
                     <div class="login-main-right bg-white p-5 mt-5 mb-5">
+                        <img src="{% static 'img/login.png' %}" class="img-fluid" alt="LOGO">
                         <div class="owl-carousel owl-carousel-login">
                             <div class="item">
                                 <div class="carousel-login-card text-center">
