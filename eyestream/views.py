@@ -93,8 +93,14 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, f'Your account has been updated!')
-            return redirect('Home')
+            
+            data={
+            'error': False, 
+            'message': 'Uploaded Successfully'
+            }
+            return JsonResponse(data, safe=False)
+            # messages.success(request, f'Your account has been updated!')
+            # return redirect('Home')
 
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -109,8 +115,7 @@ def profile(request):
     
 
 @login_required(login_url=("login"))
-def upload(request):
-    
+def upload(request):   
     if request.method == 'POST':
         form = videoForm(request.user,request.POST, request.FILES,)
         if form.is_valid():
@@ -127,6 +132,7 @@ def upload(request):
     return render(request, 'upload.html', {'form': form})
 
 
+@login_required(login_url=("login"))
 def play_video(request, pk):
     video = get_object_or_404(Videos, pk=pk)
     videos = Videos.objects.filter(catergory=video.catergory).exclude(video=video.video)
@@ -147,7 +153,7 @@ def play_video(request, pk):
 
     return render(request, 'video-page.html', context)
 
-
+@login_required(login_url=("login"))
 def subscribe_btn(request):
     subscriber = request.user
     subscribed = False
