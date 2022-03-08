@@ -32,8 +32,7 @@ $(document).ready(function(){
                     if(e.lengthComputable){
                         const percent = e.loaded / e.total * 100
                         console.log(percent)
-                        successMgs.innerHTML = "updated, refresh to see changes"
-
+                        
                         progressBar.innerHTML = `
                         
                         <div class="progress">
@@ -42,17 +41,17 @@ $(document).ready(function(){
                         </div>
                         
                         `
+                        if(percent == 100.0){
+                            successMgs.innerHTML = "updated, refresh to see changes"
+                        }
                     }
                 })
                 return xhr
             },
             success:function(response){
                 console.log(response)
-
                 console.log('for full image url ' + $('#profileImg').prop('src') );
                 console.log('for relative image url ' + $('#profileImg').attr('src'));
-
-
             },
             error:function(error){
                 console.log('error occured',error)

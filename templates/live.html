@@ -1,29 +1,36 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
- 
-    <div style="margin: 20px; margin-left: 250px;">
-        <form id="room-name-form">
-            <h4>Enter a Room Name to Create/join:</h4><br/>
-            <input name="room_name" id="room-name-input" /><br/><br/>
-            <button type="submit" class="btn btn-outline-primary btn-lg">Create/Join Room</button><br/><br/>
+
+<div class="container-fluid pb-0">
+
+  <div class="video-block section-padding">
+    <div class="row">
+      <div class="col-md-12">
+        <div>
+          <form id="room-name-form">
+            <h4>Enter a Room Name to Create/join:</h4><br />
+            <input name="room_name" id="room-name-input" /><br /><br />
+            <button type="submit" class="btn btn-outline-primary btn-lg">Create/Join Room</button><br /><br />
           </form>
           <div>
             <h1 id="roomName"></h1>
             <button class="btn btn-outline-primary" id="mute_Audio">mute Audio</button>
             <button class="btn btn-outline-primary" id="mute_Video">mute Video</button>
             <button class="btn btn-danger sub-btn" id="leave_call">Leave call</button>
-          </div><br/><br/>
-          <div id="video-container">    
+          </div><br /><br />
+          <div id="video-container">
           </div>
+        </div>
+      </div>
     </div>
-    
-  
+  </div>
+
+</div>
+
 {% endblock %}
 
 
 
 <!-- the script for video is in base.hmtl -->
-
