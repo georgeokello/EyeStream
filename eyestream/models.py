@@ -59,7 +59,7 @@ class Videos(models.Model):
     channel_name = models.ForeignKey(Channels, on_delete=models.CASCADE, related_name='video_channel')
     thumbnail = models.ImageField(default="default.jpg", null=True, blank=True, upload_to='video_thumbnail')
     date = models.DateField(auto_now=True)
-    duration = models.CharField(max_length=120)
+    # duration = models.CharField(max_length=120)
 
     # existingPath = models.CharField(unique=True, max_length=100)
     # eof = models.BooleanField()
