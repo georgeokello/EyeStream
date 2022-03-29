@@ -117,11 +117,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'live' %}">
                     <!-- <i class="fas fa-fw fa-cloud-upload-alt"></i> -->
-                    <i class="fas fa-stream"></i>
-                    <span>Go Live</span>
+                    <i class="fas fa-video"></i>
+                    <span>Video call</span>
                 </a>
             </li>
-           
+            
+        
             {% if user.is_authenticated %}
             {% else %}
             <li class="nav-item">
@@ -218,6 +219,8 @@
 
     <script src="{% static 'js/videochat.js' %}"></script>
     <script src="{% static 'js/uploadVideo.js' %}"></script>
+    <script src="{% static 'js/joinVideoChat.js' %}"></script>
+    <script defer src="{% static 'js/streamer.js' %}" type='text/javascript'></script>
 
     <script src="{% static 'js/ajax.js' %}"></script>
 

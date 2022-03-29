@@ -49,12 +49,6 @@ class videoForm(forms.ModelForm):
         self.user = user
         super(videoForm, self).__init__(*args, **kwargs)
         self.fields['channel_name'].queryset = Channels.objects.filter(user=user)
-        # self.fields['video_name'].widget = forms.TextInput(attrs={'id': 'video_name'})
-        # self.fields['catergory'].widget = forms.TextInput(attrs={'id': 'catergory'})
-        # self.fields['video'].widget = forms.TextInput(attrs={'id': 'video'})
-        # self.fields['about'].widget = forms.TextInput(attrs={'id': 'about'})
-        # self.fields['channel_name'].widget = forms.TextInput(attrs={'id': 'channel_name'})
-        # self.fields['thumbnail'].widget = forms.TextInput(attrs={'id': 'thumbnail'})
 
 
 class RoomFoom(forms.Form):

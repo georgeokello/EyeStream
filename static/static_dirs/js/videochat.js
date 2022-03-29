@@ -11,10 +11,6 @@ muteAudio.style.visibility = "hidden";
 muteVideo.style.visibility = "hidden";
 leave.style.visibility = "hidden";
 
-
-
-const audioMute = "{% static 'img/audioM.png' %}";
-
 let room;
 let localParticipant;
 
@@ -31,7 +27,7 @@ const startRoom = async (event) => {
 
     // retrieve the room name
     const roomName = roomNameInput.value;
-    //setting the room name on the page
+    // setting the room name on the page
     roomNameSpace.innerHTML = roomName;
 
     // Cookies method 

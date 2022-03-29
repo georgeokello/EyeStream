@@ -71,7 +71,7 @@
                             <a href="{% url 'channel_details' channel.id %}">{{channel}}</a>
                         </div>
                         <div class="channels-view">
-                            {{channel.subscribers|length}} Subscribers
+                            {{channel.subscribers.count}} Subscribers
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,9 @@ from django.contrib import messages
 from . forms import UserRegisterForm, UserUpdateForm, ChannelsForm, videoForm, ProfileUpdateForm, RoomFoom
 from django.contrib.auth.decorators import login_required
 from . models import Channels, Videos, VideoViews, Profile
+from django.db.models import Count
+from django.http import HttpResponse
+from moviepy.editor import *
 
 
 
@@ -21,12 +24,12 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'registration/register.html', {'forms': form})
 
-
+def joinARoomBtn(request):
+    return render(request, 'joinARoomBtn.html')
 
 def Home(request):
     videos = Videos.objects.all()
     channels = Channels.objects.all()
-
     return render(request,'index.html', {'videos':videos, 'channels':channels})
 
 
@@ -119,7 +122,12 @@ def upload(request):
     if request.method == 'POST':
         form = videoForm(request.user,request.POST, request.FILES,)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            vid = request.FILES['id_video'][0]
+            clip = VideoFileClip(vid.temporary_file_path())
+            obj.duration = clip.duration
+            print()
+            obj.save(clip.duration)
             data={
             'error': False, 
             'message': 'Uploaded Successfully'
@@ -183,7 +191,7 @@ def searchVideo(request):
         return render(request, "search.html")
 
 
-# streaming 
+# video chat
 
 import os
 import uuid  # for generating random user id values
@@ -198,6 +206,9 @@ from twilio.jwt.access_token.grants import PlaybackGrant
 from dotenv import load_dotenv
 from twilio.rest import Client
 import json
+from twilio.jwt.access_token.grants import VideoGrant
+import string
+import random
 
 
 # Load environment variables from a .env file
@@ -207,6 +218,7 @@ load_dotenv()
 account_sid = os.environ["TWILIO_ACCOUNT_SID"]
 api_key = os.environ["TWILIO_API_KEY_SID"]
 api_secret = os.environ["TWILIO_API_KEY_SECRET"]
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
 twilio_client = twilio.rest.Client(api_key, api_secret, account_sid)
 
 
@@ -216,7 +228,7 @@ def find_or_create_room(room_name):
         twilio_client.video.rooms(room_name).fetch()
     except twilio.base.exceptions.TwilioRestException:
         # the room did not exist, so create it
-        twilio_client.video.rooms.create(unique_name=room_name, type="go")
+        twilio_client.video.rooms.create(unique_name=room_name, type="group")
 
 
 def get_access_token(room_name):
@@ -241,6 +253,7 @@ def join_room(request):
     room_name = data['room_name']
         # find an existing room with this room_name, or create one
     find_or_create_room(room_name)
+   
         # retrieve an access token for this room
     access_token = get_access_token(room_name)
         # return the decoded access token in the response
@@ -248,3 +261,163 @@ def join_room(request):
         # you should call `access_token.to_jwt().decode()`
     data = {"token": access_token.to_jwt()}
     return JsonResponse(data, safe=False)
+
+
+# # livestream
+# twilio_live_account_sid = os.environ['TWILIO_LIVE_ACCOUNT_SID']
+# api_live_key = os.environ["TWILIO_LIVE_API_KEY_SID"]
+# api_live_secret = os.environ["TWILIO_LIVE_API_KEY_SECRET"]
+# auth_live_token = os.environ['TWILIO_LIVE_AUTH_TOKEN']
+
+
+# client = Client(api_live_key, api_live_secret, twilio_live_account_sid)
+
+# def streamer(request):
+#     return render(request, 'streamerPage.html')
+
+# def audience(request):
+#     return render(request, 'audience.html')
+
+# def playStreamer():
+#     player_streamer = client.media.player_streamer.create()
+#     return player_streamer.sid
+
+
+# def create_room(room_name):
+#     try:
+#         # create the room
+#         client.video.rooms.create(unique_name=room_name, type="go")
+#     except twilio.base.exceptions.TwilioRestException:
+#         print('coulfnt create the room')
+    
+
+# def startStream(request):
+#     room = ''
+#     # room name
+#     data = json.loads(request.body)
+#         # extract the room_name from the JSON body of the POST request
+#     room_name = data['streamName']
+#         # find an existing room with this room_name, or create one
+
+#     # Create the WebRTC Go video room,
+    
+#     create_room(room_name)
+    
+#     # fetch the created room
+#     room = client.video.rooms(room_name).fetch()
+    
+
+#     player_streamer1 = client.media.player_streamer.list(limit=20)
+
+#     for record in player_streamer1:
+#         print(record.sid)
+#         client.media \
+#             .player_streamer(record.sid) \
+#             .update(status='ended')
+#         print(record.sid)
+
+#     # Create PlayerStreamer
+#     player_streamer = client.media.player_streamer.create()
+    
+#     # Create the WebRTC Go video room, PlayerStreamer, and MediaProcessors
+#     media_processor = client.media \
+#         .media_processor \
+#         .create(
+#             extension='video-composer-v1',
+#             extension_context=json.dumps({
+#                 'identity': 'video-composer-v1',
+#                 'room': {
+#                     'name': room.sid
+#                 },
+#                 'outputs': [
+#                     player_streamer.sid
+#                 ]
+#             })
+#         )
+
+#     data = {
+#         'roomId': room.sid,
+#         'streamName': room_name,
+#         'playerStreamerId': player_streamer.sid,
+#         'mediaProcessorId': media_processor.sid
+#     } 
+#     return JsonResponse(data, safe=False)       
+
+
+
+# def endLiveStream(request):
+#      # stream details
+#     data = json.loads(request.body)
+#         # extract the room_name from the JSON body of the POST request
+#     stream_details = data['streamDetails']
+#         # find an existing room with this room_name, or create one
+
+#     # End the player streamer, media processor, and video room
+#     streamName  = stream_details.streamName
+#     roomId  = stream_details.roomId
+#     playerStreamerId = stream_details.playerStreamerId
+#     mediaProcessorId = stream_details.mediaProcessorId
+
+#     client.media \
+#         .media_processor(mediaProcessorId) \
+#         .update(status='ended')
+
+#     client.media \
+#         .player_streamer(playerStreamerId) \
+#         .update(status='ended')
+    
+#     client.video.rooms(roomId) \
+#         .update(status='completed')
+
+#     return f"successfully ended {streamName} room"
+
+
+# def streamerToken(request):
+#     # room name 
+#     data = json.loads(request.body)
+#         # extract the room_name from the JSON body of the POST request
+#     room_name = data['room']
+#     identity = data['identity']
+#         # find an existing room with this room_name, or create one
+
+#     token = AccessToken(twilio_live_account_sid, api_live_key, api_live_secret)
+#     video_grant = VideoGrant(room=room_name)
+#     token.add_grant(video_grant)
+#     token.identity = identity
+#     data = {"token": token.to_jwt()}
+#     return JsonResponse(data, safe=False)
+
+
+# def audienceToken(request):
+#     # generate random string for the client identity
+#     number_of_character = 20
+#     # call random.choice to find the string in uppercase + numeric data
+#     randomString = ''.join(random.choices(string.ascii_letters + string.digits, k=number_of_character))
+#     identity = str(randomString)
+
+#     #Get the first player streamer
+#     playerStreamerList = client.media.player_streamer.list(status='started', limit=20)
+#     playStreamer = True if len()
+#     if(len(playerStreamerList) == 0):
+#         mgs = "No one is streaming"
+#         return HttpResponse(mgs)
+
+#     # Otherwise create an access token with a PlaybackGrant for the livestream
+#     token = AccessToken(twilio_live_account_sid, api_live_key, api_live_secret)
+
+#     # Create a playback grant and attach it to the access token
+#     playback_grant = client.media \
+#         .player_streamer(playStreamer()) \
+#         .playback_grant() \
+#         .create()
+
+#     # wrap grant and attach to the token
+#     wrapped_grant = PlaybackGrant(grant=playback_grant.grant)
+#     token.add_grant(wrapped_grant)
+#     token.identity = identity
+#     data = {"token": token.to_jwt()}
+#     return JsonResponse(data, safe=False)
+        
+
+
+

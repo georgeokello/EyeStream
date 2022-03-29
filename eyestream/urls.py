@@ -20,4 +20,13 @@ urlpatterns = [
     path('live', views.Live, name='live'),
     path('join_room', views.join_room, name='join_room'),
     path('search', views.searchVideo, name='search'),
+
+    #live stream urls
+#     path('streamer', views.streamer, name='streamer'),
+#     path('liveEvents', views.audience, name='liveEvents'),
+#     path('startStream', views.startStream, name='startStream'),
+#     path('endLiveStream', views.endLiveStream, name='endLiveStream'),
+#     path('audienceToken', views.audienceToken, name='audienceToken'),
+#     path('streamerToken', views.streamerToken, name='streamerToken'),
+    
 ]

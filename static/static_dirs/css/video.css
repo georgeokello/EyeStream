@@ -25,3 +25,16 @@
 .invisible {
   display: none;
 }  
+
+#stream > video {
+  max-width: 70%;
+  max-height: 80%;
+  border-radius: 6px;
+}
+
+#stream{
+  max-width: 70%;
+  max-height: 80%;
+  width: auto;
+  margin: auto;
+}
